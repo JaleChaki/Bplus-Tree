@@ -332,7 +332,12 @@ namespace MyProject.Trees {
 		/// <param name="array"></param>
 		/// <param name="cap"></param>
 		public override void CopyTo(T[] array, int cap) {
-			throw new NotImplementedException();
+			var en = GetEnumerator();
+			int sz = 0;
+			while (en.MoveNext() && sz < cap) {
+				array[sz] = en.Current;
+				++sz;
+			}
 		}
 
 		/// <summary>
