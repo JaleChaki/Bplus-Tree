@@ -384,5 +384,24 @@ namespace MyProject.Trees {
 			}
 		}
 
+		protected virtual string InternalToString(Node node, string tabulation = "") {
+			StringBuilder result = new StringBuilder(tabulation)
+				.Append(node.IsLeaf ? "LEAF\n" : "not leaf\n")
+				.Append(tabulation)
+				.Append("Childs\n");
+			for (int i = 0; i < node.Childs.Count; ++i) {
+				result.Append(tabulation).Append(node.Keys[i]).Append(InternalToString(node.Childs[i], tabulation + "\t"));
+			}
+			result.Append("\n" + tabulation).Append("Pointers\n");
+			for (int i = 0; i < node.Pointers.Count; ++i) {
+				result.Append(tabulation).Append(node.Keys[i]).Append(node.Pointers[i]);
+			}
+			return result.ToString();
+		}
+
+		public override string ToString() {
+			return InternalToString(Root);
+		}
+
 	}
 }
