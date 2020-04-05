@@ -332,7 +332,12 @@ namespace MyProject.Trees {
 		/// <param name="array"></param>
 		/// <param name="cap"></param>
 		public override void CopyTo(T[] array, int cap) {
-			throw new NotImplementedException();
+			var en = GetEnumerator();
+			int sz = 0;
+			while (en.MoveNext() && sz < cap) {
+				array[sz] = en.Current;
+				++sz;
+			}
 		}
 
 		/// <summary>
@@ -382,6 +387,25 @@ namespace MyProject.Trees {
 			foreach (var item in collection) {
 				Add(item);
 			}
+		}
+
+		protected virtual string InternalToString(Node node, string tabulation = "") {
+			StringBuilder result = new StringBuilder(tabulation)
+				.Append(node.IsLeaf ? "LEAF\n" : "not leaf\n")
+				.Append(tabulation)
+				.Append("Childs\n");
+			for (int i = 0; i < node.Childs.Count; ++i) {
+				result.Append(tabulation).Append(node.Keys[i]).Append(InternalToString(node.Childs[i], tabulation + "\t"));
+			}
+			result.Append("\n" + tabulation).Append("Pointers\n");
+			for (int i = 0; i < node.Pointers.Count; ++i) {
+				result.Append(tabulation).Append(node.Keys[i]).Append(node.Pointers[i]);
+			}
+			return result.ToString();
+		}
+
+		public override string ToString() {
+			return InternalToString(Root);
 		}
 
 	}
