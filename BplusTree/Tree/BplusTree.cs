@@ -125,15 +125,20 @@ namespace MyProject.Trees {
 
 		}
 
-		public class BplusTreeEnumerator : IEnumerator<T> {
-			public T Current => current;
+		protected class BplusTreeEnumerator : IEnumerator<T> {
+			public T Current => CurrentNode.Pointers[Index];
 
-			object IEnumerator.Current => current;
+			object IEnumerator.Current => Current;
 
-			private T current;
+			private Node CurrentNode;
 
-			protected BplusTreeEnumerator(T first) {
-				current = first;
+			private Node First;
+
+			private int Index = 0;
+
+			public BplusTreeEnumerator(Node first) {
+				CurrentNode = first;
+				First = first;
 			}
 
 			public void Dispose() {
@@ -141,11 +146,17 @@ namespace MyProject.Trees {
 			}
 
 			public bool MoveNext() {
-				throw new NotImplementedException();
+				++Index;
+				if (Index >= CurrentNode.Pointers.Count) {
+					Index = 0;
+					CurrentNode = CurrentNode.RightBrother;
+				}
+				return CurrentNode != null;
 			}
 
 			public void Reset() {
-				throw new NotImplementedException();
+				CurrentNode = First;
+				Index = 0;
 			}
 		}
 
@@ -329,7 +340,17 @@ namespace MyProject.Trees {
 		/// </summary>
 		/// <returns></returns>
 		public override IEnumerator<T> GetEnumerator() {
-			throw new NotImplementedException();
+			var currentNode = Root;
+			while (currentNode.Pointers.Count == 0) {
+				if (currentNode.Childs.Count == 0) {
+					break;
+				}
+				currentNode = currentNode.Childs[0];
+			}
+			if (currentNode.Pointers.Count == 0) {
+				return new BplusTreeEnumerator(null);
+			}
+			return new BplusTreeEnumerator(currentNode);
 		}
 
 		/// <summary>
