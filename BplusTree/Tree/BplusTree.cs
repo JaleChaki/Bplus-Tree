@@ -9,6 +9,8 @@ namespace MyProject.Trees {
 
 	public class BplusTree<T> : Tree<T> {
 
+		public const int DefaultBranchingRatio = 3;
+
 		/// <summary>
 		/// B+ tree branching ratio
 		/// </summary>
@@ -135,7 +137,7 @@ namespace MyProject.Trees {
 			}
 
 			public void Dispose() {
-				throw new NotImplementedException();
+				
 			}
 
 			public bool MoveNext() {
@@ -334,12 +336,31 @@ namespace MyProject.Trees {
 		/// constructor
 		/// </summary>
 		/// <param name="t"> branching ratio </param>
-		public BplusTree(int t = 3) {
+		public BplusTree(int t = DefaultBranchingRatio) {
 			if (t <= 0) {
 				throw new ArgumentException("incorrect branching ratio");
 			}
 			BranchingRatio = t;
 			Root = new Node();
+		}
+
+		public BplusTree(params T[] collection) {
+			BranchingRatio = DefaultBranchingRatio;
+			Root = new Node();
+			foreach (T item in collection) {
+				Add(item);
+			}
+		}
+
+		public BplusTree(IEnumerable<T> collection) {
+			BranchingRatio = DefaultBranchingRatio;
+			Root = new Node();
+			if (collection == null) {
+				return;
+			}
+			foreach (var item in collection) {
+				Add(item);
+			}
 		}
 
 	}
