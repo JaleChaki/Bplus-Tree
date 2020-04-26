@@ -10,7 +10,6 @@ namespace BplusTreeAppTest {
 
 			Console.WriteLine("Hello, world!");
 			Console.WriteLine("test!");
-			Console.WriteLine("test2");
 			Console.ReadKey();
 
 
